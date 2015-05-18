@@ -1,10 +1,13 @@
 package presentation;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 import javax.swing.*;
 import javax.swing.event.*;
 
+import domain.Order;
+import domain.Product;
 import businesslogic.OrderManager;
 
 public class KitchenGUI extends JPanel {
@@ -48,6 +51,8 @@ public class KitchenGUI extends JPanel {
 	}
 	
 	public void createOrderOverview(JComponent orderOverview) {
+		ArrayList<Order> orders = manager.getOrders();
+		
 		orderOverview.setLayout(new BorderLayout(10, 10));
 		orderOverview.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		
@@ -66,9 +71,9 @@ public class KitchenGUI extends JPanel {
 		orderList.setVisibleRowCount(-1);
 		orderList.addListSelectionListener(selectionListener);
 		
-		orderListModel.addElement("Item 1");
-		orderListModel.addElement("Item 2");
-		orderListModel.addElement("Item 3");
+		for(Order order: orders) {
+			orderListModel.addElement("Tafel " + order.getTableNr());
+		}
 		
 		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, orderList, mealList);
 		splitPane.setOneTouchExpandable(true);
@@ -93,8 +98,16 @@ public class KitchenGUI extends JPanel {
 			if (e.getValueIsAdjusting() == false) {
 				mealListModel.clear();
 				
-				String currentOrder = (String) orderList.getSelectedValue();
-				mealListModel.addElement(currentOrder);
+				String selectedTable = (String) orderList.getSelectedValue();
+				String nr = selectedTable.substring(6, 7);
+				
+				int tableNr = Integer.parseInt(nr);
+				
+				ArrayList<Product> products = manager.getProducts(tableNr);
+				
+				for(Product product: products) {
+					mealListModel.addElement(product.getName());
+				}
 			}
 		}
 	};

@@ -1,6 +1,7 @@
 package main;
 
 import javax.swing.*;
+
 import java.awt.*;
 
 import presentation.LoginGUI;
@@ -13,7 +14,7 @@ public class Main extends JFrame {
 	public static void main(String[] args) {
 		OrderManager manager = new OrderManager();
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-		
+				
 		JFrame frame = new Main();
         frame.setSize(200, 275);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
