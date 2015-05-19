@@ -1,6 +1,7 @@
 package presentation;
 
 import java.awt.*;
+import java.awt.event.*;
 import java.util.ArrayList;
 
 import javax.swing.*;
@@ -60,6 +61,8 @@ public class KitchenGUI extends JPanel {
 		west.setLayout(new FlowLayout());
 		
 		acceptOrder = new JButton("Accepteren");
+		acceptOrder.addActionListener(acceptActionListener);
+		setButtonEnabled();
 		
 		//Provide minimum sizes for the two components in the split pane
 		Dimension minimumSize = new Dimension(100, 50);
@@ -72,7 +75,7 @@ public class KitchenGUI extends JPanel {
 		orderList.addListSelectionListener(selectionListener);
 		
 		for(Order order: orders) {
-			orderListModel.addElement("Tafel " + order.getTableNr());
+			orderListModel.addElement("Bestelnr: " + order.getOrderNr());
 		}
 		
 		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, orderList, mealList);
@@ -93,21 +96,53 @@ public class KitchenGUI extends JPanel {
 		
 	}
 	
+	public void setButtonEnabled() {
+		acceptOrder.setEnabled(false);
+		
+		if(!orderList.isSelectionEmpty()) {
+			String selectedOrder = (String) orderList.getSelectedValue();
+			String nr = selectedOrder.substring(selectedOrder.lastIndexOf(' ') + 1);
+			
+			int orderNr = Integer.parseInt(nr);
+			
+			if((manager.searchOrder(orderNr)).getStatus().equals("geplaatst")) {
+				acceptOrder.setEnabled(true);
+			}
+		}
+	}
+	
 	ListSelectionListener selectionListener = new ListSelectionListener() {
 		public void valueChanged(ListSelectionEvent e) {
 			if (e.getValueIsAdjusting() == false) {
 				mealListModel.clear();
 				
-				String selectedTable = (String) orderList.getSelectedValue();
-				String nr = selectedTable.substring(6, 7);
+				String selectedOrder = (String) orderList.getSelectedValue();
+				String nr = selectedOrder.substring(selectedOrder.lastIndexOf(' ') + 1);
 				
-				int tableNr = Integer.parseInt(nr);
+				int orderNr = Integer.parseInt(nr);
 				
-				ArrayList<Product> products = manager.getProducts(tableNr);
+				ArrayList<Product> products = manager.getProducts(orderNr);
 				
 				for(Product product: products) {
 					mealListModel.addElement(product.getName());
 				}
+			}
+			
+			setButtonEnabled();
+		}
+	};
+	
+	ActionListener acceptActionListener = new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			if(!orderList.isSelectionEmpty()) {
+				String selectedOrder = (String) orderList.getSelectedValue();
+				String nr = selectedOrder.substring(selectedOrder.lastIndexOf(' ') + 1);
+				
+				int orderNr = Integer.parseInt(nr);
+				
+				manager.acceptOrder(orderNr);
+				
+				setButtonEnabled();
 			}
 		}
 	};

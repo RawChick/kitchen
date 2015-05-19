@@ -29,17 +29,32 @@ public class OrderManager {
 		OrderRow orderRow1 = new OrderRow(1, 1, 1, 2);
 		OrderRow orderRow2 = new OrderRow(1, 1, 2, 4);
 		
+		Order order2 = new Order(2, 2, "geplaatst", date1);
+		Product product3 = new Product(3, "Espresso", 200);
+		Product product4 = new Product(4, "Latte Machiato", 240);
+		OrderRow orderRow3 = new OrderRow(2, 2, 3, 2);
+		OrderRow orderRow4 = new OrderRow(2, 2, 4, 4);
+		OrderRow orderRow5 = new OrderRow(2, 2, 1, 3);
+		
 		orders.add(order1);
+		orders.add(order2);
 		products.add(product1);
 		products.add(product2);
+		products.add(product3);
+		products.add(product4);
 		orderRows.add(orderRow1);
 		orderRows.add(orderRow2);
+		orderRows.add(orderRow3);
+		orderRows.add(orderRow4);
+		orderRows.add(orderRow5);
 	}
 	
 	public void acceptOrder(int orderNr) {
 		for(Order order: orders) {
 			if(order.getOrderNr() == orderNr) {
 				order.setStatus("geaccepteerd");
+				
+				System.out.println("Ordernr: "+order.getOrderNr()+", status: "+order.getStatus());
 			}
 		}
 	}
@@ -56,11 +71,11 @@ public class OrderManager {
 		products.add(product);
 	}
 	
-	public ArrayList<Product> getProducts(int tableNr) {
+	public ArrayList<Product> getProducts(int orderNr) {
 		ArrayList<Product> products = new ArrayList<Product>();
 		
 		for(OrderRow orderRow: orderRows) {
-			if(orderRow.getTableNr() == tableNr) {
+			if(orderRow.getOrderNr() == orderNr) {
 				Product product = searchProduct(orderRow.getProductNr());
 				
 				products.add(product);
@@ -69,6 +84,19 @@ public class OrderManager {
 		
 		return products;
 	}
+	
+	public Order getOrders(int tableNr) {
+		Order order = null;
+		
+		for(OrderRow orderRow: orderRows) {
+			if(orderRow.getTableNr() == tableNr) {
+				order = searchOrder(orderRow.getOrderNr());
+			}
+		}
+		
+		return order;
+	}
+	
 	
 	public Product searchProduct(int productNr) {
 		Product product = null;
@@ -80,5 +108,17 @@ public class OrderManager {
 		}
 		
 		return product;
+	}
+	
+	public Order searchOrder(int orderNr) {
+		Order order = null;
+		
+		for(Order o: orders) {
+			if(o.getOrderNr() == orderNr) {
+				order = o;
+			}
+		}
+		
+		return order;
 	}
 }
