@@ -26,15 +26,15 @@ public class OrderManager {
 		Order order1 = new Order(1, 1, "geplaatst", date1);
 		Product product1 = new Product(1, "Bier", 210);
 		Product product2 = new Product(2, "Koffie", 200);
-		OrderRow orderRow1 = new OrderRow(1, 1, 1, 2);
-		OrderRow orderRow2 = new OrderRow(1, 1, 2, 4);
+		OrderRow orderRow1 = new OrderRow(1, order1, product1, 2);
+		OrderRow orderRow2 = new OrderRow(1, order1, product2, 4);
 		
 		Order order2 = new Order(2, 2, "geplaatst", date1);
 		Product product3 = new Product(3, "Espresso", 200);
 		Product product4 = new Product(4, "Latte Machiato", 240);
-		OrderRow orderRow3 = new OrderRow(2, 2, 3, 2);
-		OrderRow orderRow4 = new OrderRow(2, 2, 4, 4);
-		OrderRow orderRow5 = new OrderRow(2, 2, 1, 3);
+		OrderRow orderRow3 = new OrderRow(2, order2, product3, 2);
+		OrderRow orderRow4 = new OrderRow(2, order2, product4, 4);
+		OrderRow orderRow5 = new OrderRow(2, order2, product1, 3);
 		
 		orders.add(order1);
 		orders.add(order2);

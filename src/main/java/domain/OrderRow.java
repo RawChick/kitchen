@@ -2,14 +2,14 @@ package domain;
 
 public class OrderRow {
 	private int tableNr;
-	private int orderNr;
-	private int productNr;
+	private Order order;
+	private Product product;
 	private int amount;
 	
-	public OrderRow(int tableNr, int orderNr, int productNr, int amount) {
+	public OrderRow(int tableNr, Order order, Product product, int amount) {
 		this.tableNr = tableNr;
-		this.orderNr = orderNr;
-		this.productNr = productNr;
+		this.order = order;
+		this.product = product;
 		this.amount = amount;
 	}
 	
@@ -18,18 +18,14 @@ public class OrderRow {
 	}
 	
 	public int getOrderNr() {
-		return orderNr;
+		return order.getOrderNr();
 	}
 	
 	public int getProductNr() {
-		return productNr;
+		return product.getProductNr();
 	}
 	
 	public int getAmount() {
 		return amount;
-	}
-	
-	public void setAmount(int newAmount) {
-		
 	}
 }
