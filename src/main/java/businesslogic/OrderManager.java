@@ -110,6 +110,18 @@ public class OrderManager {
 		return product;
 	}
 	
+	public Product searchProduct(String productName) {
+		Product product = null;
+		
+		for(Product p: products) {
+			if(p.getName() == productName) {
+				product = p;
+			}
+		}
+		
+		return product;
+	}
+	
 	public Order searchOrder(int orderNr) {
 		Order order = null;
 		
