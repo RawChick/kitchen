@@ -11,9 +11,9 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
+import domain.Product;
 import businesslogic.OrderManager;
 
 
@@ -39,11 +39,11 @@ public class SpecificationGUI extends JPanel{
 		String[] columnNames = {"Ingrediënt",
         "Hoeveelheid", "Eenheid"};
 Object[][] data = {
-	    {"Tomaat", new Integer(2),"Schijfjes" },
-	    {"Sla", new Integer(20), "Gram"},
-	    {"Kaas", new Integer(1), "Plakje"},
-	    {"Ham", new Integer(2), "Plakjes"},
-	    {"Komkommer", new Integer(4), "Schijfjes"}
+	    {"Tomaat", 2,"Schijfjes" },
+	    {"Sla", 20, "Gram"},
+	    {"Kaas", 1, "Plakje"},
+	    {"Ham", 2, "Plakjes"},
+	    {"Komkommer", 4 , "Schijfjes"}
 	};
 
 
@@ -60,11 +60,21 @@ Object[][] data = {
 		JPanel innersouth = new JPanel();
 		JPanel southRight = new JPanel();
 		
+		Product product = manager.searchProduct(productName);
+		String prepTime = product.getPreparationTime().toString();
+		String hours = prepTime.substring(0, 2);
+		String minutes = prepTime.substring(3, 5);
+		if (hours.equals("00")){
+			timeRight = new JLabel(minutes + " minuten");
+		} else{
+			timeRight = new JLabel(hours +" uur en " + minutes + " minuten");
+		}
+		
 		name = new JLabel("Gerechtnaam:");
 		nameRight = new JLabel(productName);
 		ingredient = new JLabel("Ingrediënten:");
 		time = new JLabel("Bereidingstijd:");
-		timeRight = new JLabel("test");
+		
 		
 		backButton = new JButton("Terug");
 		backButton.addActionListener(buttonActionListener);

@@ -2,7 +2,7 @@ package datastorage;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.sql.Time;
 
 import domain.Product;
 
@@ -28,8 +28,9 @@ public class ProductDAO {
 						int productNrFromDb = resultset.getInt("ProductNumber");
 						String productNameFromDb = resultset.getString("Name");
 						long priceFromDb = resultset.getLong("Price");
+						Time timeFromDb = resultset.getTime("preparationTime");
 
-						product = new Product(productNrFromDb, productNameFromDb, priceFromDb);
+						product = new Product(productNrFromDb, productNameFromDb, priceFromDb, timeFromDb);
 					}
 				} catch (SQLException e) {
 					System.out.println(e);
