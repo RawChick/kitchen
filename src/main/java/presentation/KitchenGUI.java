@@ -24,6 +24,12 @@ public class KitchenGUI extends JPanel {
 	private JList mealList = new JList(mealListModel);
 	private JButton acceptOrder;
 	private JButton specificationMeal;
+	private JButton ready;
+	private JButton newMeal;
+	private JButton changeMeal;
+	private JButton deleteMeal;
+	private DefaultListModel managingMealListModel = new DefaultListModel();
+	private JList managingMealList = new JList(managingMealListModel);
 	
 	public KitchenGUI(OrderManager manager, JFrame frame) {
 		this.manager = manager;
@@ -39,15 +45,14 @@ public class KitchenGUI extends JPanel {
 		JTabbedPane tabbedPane = new JTabbedPane();
 
 		JComponent orderOverview = new JPanel();
-		JComponent supply = new JPanel();
+		
 		JComponent mealManaging = new JPanel();
 		
 		createOrderOverview(orderOverview);
-		createSupply(supply);
+
 		createMealManaging(mealManaging);
 		
 		tabbedPane.addTab("Bestellingsoverzicht", orderOverview);
-		tabbedPane.addTab("Voorraad", supply);
 		tabbedPane.addTab("Gerechtenbeheer", mealManaging);
 		
 		add(tabbedPane);
@@ -67,6 +72,8 @@ public class KitchenGUI extends JPanel {
 		specificationMeal = new JButton("Gerechtspecificaties");
 		specificationMeal.addActionListener(specificationActionListener);
 		setButtonEnabled();
+		ready = new JButton("Gereed");
+		ready.addActionListener(readyActionListener);
 		
 		//Provide minimum sizes for the two components in the split pane
 		Dimension minimumSize = new Dimension(100, 50);
@@ -80,19 +87,18 @@ public class KitchenGUI extends JPanel {
 		
 		
 		for(Order order: orders) {
-			//haal de orderNrs op van alle orders?
-			int orderNr = 2;
-			if((manager.searchOrder(orderNr)).getStatus().equals("geplaatst")) {
-			defaultOrderListModel.addElement("Bestelnr: " + order.getOrderNr());
-		}	//else if((manager.searchOrder(orderNr)).getStatus().equals("geaccepteerd")){
-			//acceptedOrderListModel.addElement("Bestelnr: " + order.getOrderNr());
-			//	}
-			}
+			if(order.getStatus().equals("geplaatst")) {
+				defaultOrderListModel.addElement("Bestelnr: " + order.getOrderNr());
+			}	//else if((manager.searchOrder(orderNr)).getStatus().equals("geaccepteerd")){
+				//acceptedOrderListModel.addElement("Bestelnr: " + order.getOrderNr());
+		//	}
+		}
 		
 		
 		
 		south.add(acceptOrder, BorderLayout.WEST);
 		south.add(specificationMeal, BorderLayout.EAST);
+		south.add(ready, BorderLayout.CENTER);
 			
 		
 		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, defaultOrderList, mealList);
@@ -104,12 +110,48 @@ public class KitchenGUI extends JPanel {
 		
 	}
 	
-	public void createSupply(JComponent supply) {
-		
-	}
 	
 	public void createMealManaging(JComponent mealManaging) {
 		
+		
+		mealManaging.setLayout(new BorderLayout(10, 10));
+		mealManaging.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+			
+		 JScrollPane scrollableList = new JScrollPane(managingMealList);
+		
+			JPanel south = new JPanel();
+			south.setLayout(new BorderLayout(10, 10));
+			
+			newMeal = new JButton("Nieuw");
+			newMeal.addActionListener(newMealActionListener);
+			changeMeal = new JButton("Wijzigen");
+			changeMeal.addActionListener(changeMealActionListener);
+			deleteMeal = new JButton("Verwijderen");
+			deleteMeal.addActionListener(deleteMealActionListener);
+			ready = new JButton("Gereed");
+			ready.addActionListener(readyActionListener);
+			
+			//Provide minimum sizes for the two components in the split pane
+			Dimension minimumSize = new Dimension(100, 50);
+			managingMealList.setMinimumSize(minimumSize);
+			mealList.setMinimumSize(minimumSize);
+			
+			managingMealList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+			managingMealList.setLayoutOrientation(JList.VERTICAL);
+			managingMealList.setVisibleRowCount(-1);
+			managingMealList.addListSelectionListener(selectionListener);
+			
+					
+			
+			south.add(acceptOrder, BorderLayout.WEST);
+			south.add(specificationMeal, BorderLayout.EAST);
+			south.add(ready, BorderLayout.CENTER);
+				
+			
+			
+			mealManaging.add(south, BorderLayout.SOUTH);
+			mealManaging.add(scrollableList, BorderLayout.CENTER);
+	
 	}
 	
 	public void setButtonEnabled() {
@@ -165,6 +207,21 @@ public class KitchenGUI extends JPanel {
 			}
 		}
 	};
+	
+	ActionListener readyActionListener = new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			if(!defaultOrderList.isSelectionEmpty()) {
+				String selectedOrder = (String) defaultOrderList.getSelectedValue();
+				String nr = selectedOrder.substring(selectedOrder.lastIndexOf(' ') + 1);
+				
+				int orderNr = Integer.parseInt(nr);
+				System.out.println(orderNr);
+				manager.readyOrder(orderNr);
+				
+			
+			}
+		}
+	};
 
 	ActionListener specificationActionListener = new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
@@ -177,6 +234,36 @@ public class KitchenGUI extends JPanel {
 		}
 		
 	};
+	
+	ActionListener newMealActionListener = new ActionListener(){
+	public void actionPerformed(ActionEvent e){
+		if(!mealList.isSelectionEmpty()) {
+			String selectedMeal = (String) mealList.getSelectedValue();
+			String productName = selectedMeal.substring(selectedMeal.lastIndexOf(' ') + 1);
+			
+			newMealMenu(productName);
+		}
+	}
+	};
+	
+	ActionListener changeMealActionListener = new ActionListener(){
+		public void actionPerformed(ActionEvent e){
+			if(!mealList.isSelectionEmpty()) {
+				String selectedMeal = (String) mealList.getSelectedValue();
+				String productName = selectedMeal.substring(selectedMeal.lastIndexOf(' ') + 1);
+				
+				changeMealMenu(productName);
+			}
+		}
+		};
+		
+		ActionListener deleteMealActionListener = new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				
+			}
+			};
+	
+	
 	public void specificationMenu(String productName) {
 Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		
@@ -194,6 +281,36 @@ Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		
 	}
 	
+	public void newMealMenu(String productName) {
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+				
+				frame.getContentPane().removeAll();
+				frame.setTitle("Gerecht toevoegen");
+						
+				JPanel paneel = new SpecificationGUI(manager, frame, productName);
+				
+				frame.setContentPane(paneel);
+				frame.setVisible(true);
+				frame.validate();
+				frame.repaint();
 	
-
+	
+	}
+	
+	public void changeMealMenu(String productName) {
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+				
+				frame.getContentPane().removeAll();
+				frame.setTitle("Gerecht wijzigen");
+						
+				JPanel paneel = new SpecificationGUI(manager, frame, productName);
+				
+				frame.setContentPane(paneel);
+				frame.setVisible(true);
+				frame.validate();
+				frame.repaint();
+	
+				
+	}
+				
 }

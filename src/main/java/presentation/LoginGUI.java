@@ -75,8 +75,19 @@ public class LoginGUI extends JPanel {
 	
 	ActionListener loginActionEvent = new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
-			if(employeeCode.getText().equals("1234")) {
+			/*if(employeeCode.getText().equals("1234")) {
 				alterInterface();
+			}*/
+			
+			String employeeNumber = employeeCode.getText();
+			
+			boolean login = manager.findEmployee(employeeNumber);
+			
+			if(login == true) {
+				alterInterface();
+			} else {
+				JOptionPane.showMessageDialog(null, "U bent niet bevoegd om in te loggen, probeer het alstublieft opnieuw.", "Onjuiste bevoegdheden", JOptionPane.ERROR_MESSAGE);
+					employeeCode.setText("");
 			}
 		}
 	};

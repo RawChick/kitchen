@@ -3,11 +3,14 @@ package datastorage;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
+import java.util.ArrayList;
 
+import domain.Order;
 import domain.Product;
 
 public class ProductDAO {
-	public Product findProduct(int productNr) {
+	public ArrayList<Product> findProduct() {
+		ArrayList<Product> products = new ArrayList<Product>();
 		Product product = null;
 
 		// First open a database connnection
@@ -16,8 +19,7 @@ public class ProductDAO {
 			// If a connection was successfully setup, execute the SELECT
 			// statement.
 			ResultSet resultset = connection
-					.executeSQLSelectStatement("SELECT * FROM member WHERE MembershipNumber = "
-							+ productNr + ";");
+					.executeSQLSelectStatement("SELECT * FROM menu_item WHERE kind = 1");
 
 			if (resultset != null) {
 				try {
@@ -44,7 +46,7 @@ public class ProductDAO {
 			connection.closeConnection();
 		}
 
-		return product;
+		return products;
 	}
 
 	/**
@@ -77,4 +79,5 @@ public class ProductDAO {
 
 		return result;
 	}
+
 }
