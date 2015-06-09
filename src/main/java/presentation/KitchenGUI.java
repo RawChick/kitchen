@@ -71,10 +71,10 @@ public class KitchenGUI extends JPanel {
 		acceptOrder.addActionListener(acceptActionListener);
 		specificationMeal = new JButton("Gerechtspecificaties");
 		specificationMeal.addActionListener(specificationActionListener);
-		setButtonEnabled();
+	
 		ready = new JButton("Gereed");
 		ready.addActionListener(readyActionListener);
-		
+		setButtonEnabled();
 		//Provide minimum sizes for the two components in the split pane
 		Dimension minimumSize = new Dimension(100, 50);
 		defaultOrderList.setMinimumSize(minimumSize);
@@ -128,9 +128,7 @@ public class KitchenGUI extends JPanel {
 			changeMeal.addActionListener(changeMealActionListener);
 			deleteMeal = new JButton("Verwijderen");
 			deleteMeal.addActionListener(deleteMealActionListener);
-			ready = new JButton("Gereed");
-			ready.addActionListener(readyActionListener);
-			
+		
 			//Provide minimum sizes for the two components in the split pane
 			Dimension minimumSize = new Dimension(100, 50);
 			managingMealList.setMinimumSize(minimumSize);
@@ -143,9 +141,9 @@ public class KitchenGUI extends JPanel {
 			
 					
 			
-			south.add(acceptOrder, BorderLayout.WEST);
-			south.add(specificationMeal, BorderLayout.EAST);
-			south.add(ready, BorderLayout.CENTER);
+			south.add(newMeal, BorderLayout.CENTER);
+			south.add(changeMeal, BorderLayout.WEST);
+			south.add(deleteMeal, BorderLayout.EAST);
 				
 			
 			
@@ -157,7 +155,7 @@ public class KitchenGUI extends JPanel {
 	public void setButtonEnabled() {
 		acceptOrder.setEnabled(false);
 		specificationMeal.setEnabled(false);
-		
+		ready.setEnabled(false);
 		if(!defaultOrderList.isSelectionEmpty()) {
 			String selectedOrder = (String) defaultOrderList.getSelectedValue();
 			String nr = selectedOrder.substring(selectedOrder.lastIndexOf(' ') + 1);
@@ -168,6 +166,9 @@ public class KitchenGUI extends JPanel {
 			if((manager.searchOrder(orderNr)).getStatus().equals("geplaatst")) {
 				acceptOrder.setEnabled(true);
 				
+				if((manager.searchOrder(orderNr)).getStatus().equals("geaccepteerd")) {
+					ready.setEnabled(true);
+				}	
 			}
 		}
 	}
@@ -218,7 +219,7 @@ public class KitchenGUI extends JPanel {
 				System.out.println(orderNr);
 				manager.readyOrder(orderNr);
 				
-			
+				setButtonEnabled();
 			}
 		}
 	};
